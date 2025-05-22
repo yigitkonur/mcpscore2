@@ -1,0 +1,115 @@
+# Single Server Brief (OmniMCP)
+
+**Document Section: III. Page-by-Page Specification**
+
+**(B) MCP Server Detail & Management Page ((`/servers/[server_name]`)**
+
+- **Page Name/Type:** MCP Server Detail & Management Page
+- **Purpose & Goals:**
+    - **Unified Server Hub:** Serve as the definitive, comprehensive resource for *any* MCP Server listed in the MCP Omni registry, whether it's an external community project, an official provider's offering, or a server deployed and hosted *directly on the MCP Omni platform*.
+    - **Clear Context Distinction:** Immediately and unambiguously communicate the server's origin and nature (External-Remote, External-Local, Omni-Hosted) through clear visual indicators and adapt displayed information (connection methods, configuration needs, management actions) accordingly.
+    - **Deep Evaluation:** Enable thorough assessment based on standardized metadata, detailed tool manifests, complete configuration schemas, security scan results, quality scores, version history, community reviews, practical use cases, and ecosystem presence. Facilitate deep evaluation through structured schema, security scores, reviews, and direct integration with the Playground for interactive testing of its Tools.
+    - **Facilitate Integration & Usage:** Provide tailored, actionable guidance for connecting to or utilizing the server based on its type (Remote, Local, Omni-Hosted) across various clients (SDKs, specific apps, manual setup). Include direct links to interactive testing in the Playground. Offer guidance on client configuration ("Get Connection Info") and linking to Use Cases for all servers.
+    - **Enable Platform Hosting & Management:** For servers eligible for or already hosted on MCP Omni, provide integrated controls for deployment configuration, status monitoring, log access, resource management, and lifecycle actions (Start/Stop/Configure/Redeploy/Logs/Metrics) directly within the relevant tabs. Provide the unique SSE endpoint and specific usage examples for Omni-Hosted servers.
+    - **Centralize Information:** Act as the single point of access for all information pertaining to a specific server version, including its tools, schema, documentation (README), usage examples, security posture, community feedback, version history, and deployment status (if hosted).
+    - **Foster Community & Trust:** Consolidate trust signals (verification, scores, scans, license, reviews) and provide a space for community discussion (comments/Q&A).
+- **Target Audience & Scenarios:**
+    - *Developer Evaluating External Server:* "Is this community GitHub server (STDIO) trustworthy and well-documented? What tools does it offer? How do I run it locally?" -> Checks Security/Score tab, views Tools tab, checks Schema/Config tab (`Connection` & `Runtime Config` sub-tabs) for run commands/needs, reads Reviews.
+    - *Developer Evaluating Omni-Hosted Server:* "Does Omni's official hosted Salesforce Server have the 'create_lead' tool? How do I connect to its SSE endpoint? What are the resource limits?" -> Checks Tools tab, checks `Schema & Config` (`Connection` sub-tab) or `Installation & Usage` tab for SSE endpoint/auth details, checks `Deployment & Monitoring` tab for resource info.
+    - *User Connecting Client:* "How do I add this specific Remote server (found via aggregator link) to Claude Desktop?" -> Goes to `Installation & Usage` tab, finds relevant client guide, uses "Get Connection Info" helper modal for tailored snippets.
+    - *Server Author (External Server):* "Has Omni scanned my server repo recently? Are there any new reviews? Can I claim ownership?" -> Checks Security/Score tab, Reviews tab, sees "Claim Ownership" button in sidebar.
+    - *Server Author (Omni-Hosted Server):* "My hosted Server deployment failed. What went wrong? Let me check the logs." -> Navigates to `Deployment & Monitoring` tab, views Logs section. "I need to update an API key environment variable for my hosted Server." -> Navigates to `Deployment & Monitoring` tab -> Configuration section (or `Schema & Config` -> `Runtime Config` sub-tab) -> Edits ENV VAR.
+- **Layout & Structure:** **Adaptive 2-Column Layout.** The core structure remains consistent, but the *content and actions* within tabs and the sidebar dynamically adapt based on the server's `Hosting Type` (External vs. Omni-Hosted) and `Server Type` (Remote vs. Local).
+    - **Main Content Area (Left, approx. 65-70% width):**
+        1. Server Header Area (Comprehensive identification, including Hosting Type).
+        2. Tab Navigation (Dynamically adjusts available/emphasized tabs).
+        3. Tab Content Area (Content within tabs adapts contextually).
+    - **Right Sidebar (Right, approx. 30-35% width):**
+        1. Primary Action Buttons (Dynamically change based on Hosting Type and user permissions).
+        2. Metadata Summary Card (Includes Hosting Type).
+        3. Contextual Links/Info (Adapts based on Hosting Type).
+- **Key UI Components & Elements (Detailed & Adaptive):**
+    1. **Top Navigation Bar:** (Platform Wide, Consistent).
+    2. **Breadcrumbs:** `MCP Omni > Registry > Servers > [Namespace] > [Server Name] > [Version]`.
+    3. **Server Header Area (Above Tabs - Includes Hosting Context):**
+        - **Title Block:** `Server Name`, `by @Author/Namespace ✓` (with Verification Checkmark), `[Badge: Official/Verified/Community]`.
+        - **Version Selector:** Dropdown (`v1.0.0`, `latest`, etc.).
+        - **Type & Hosting Badges (CRITICAL):** Display *both* clearly and visually distinctly:
+            - `[API Icon] Remote (SSE/HTTP)` **or** `[Terminal Icon] Local (STDIO)`
+            - **AND** `[External Link Icon] External Server` **or** `[Omni Logo Icon] Hosted by Omni`. These badges immediately set the context for the rest of the page.
+        - **Tags Row:** Functional, Technology, License tags.
+        - **Stats Row:** Usage/Downloads, Rating, Forks, Rank, Quality Score Summary (`📈 B`).
+        - **Dates Row:** Published, Last Updated.
+        - **External Links Row:** Source Repo, Issue Tracker, Official Docs links.
+    1. **Tab Navigation (Adaptive Emphasis):**
+        - **Core Tabs (Always Visible):** `Overview`, `Tools`, `Schema & Config`, `Installation & Usage`, `Security & Score`, `Reviews & Comments`, `Use Cases`, `Related Items`, `Versions`.
+        - **Conditional Tab:** `Deployment & Monitoring` - **Visible *only* if `Hosting Type: Hosted by Omni` AND the current user has management permissions.**
+        - **Emphasis:** While all core tabs are present, the *default active tab* might shift. For External servers, `Installation & Usage` might be default. For Hosted servers, `Deployment & Monitoring` might be default (if user has permissions and is managing).
+    1. **Tab Content Areas (Detailed & Adaptive Specifications):**
+        - **`Overview` Tab:**
+            - **Content:** Rendered README/Description from the source. Curated summary if available.
+            - **Adaptation:** May include a small banner if Omni-Hosted linking to the `Deployment` tab for management.
+        - **`Tools` Tab:**
+            - **Content:** Detailed list of Tools provided by *this server version*. Each tool shows: Name, Description, Parameters (Name, Type, Req, Desc, Default), Output Schema/Desc. Each tool name links to its canonical Tool Detail Page (`/registry/tools/[server-namespace]/[server-name]/[tool-name]/[version]`).
+            - **Adaptation:** Include a prominent `[Playground Icon] Test This Server in Playground` button at the top. Each tool row has its own `[Playground Icon] Test in Playground` link, pre-configuring the Playground for that specific tool. The *target* for the playground test will implicitly be the external server definition or the user's specific Omni-hosted instance.
+        - **`Schema & Config` Tab:** **Crucial Adaptation.** Uses Sub-Tabs: `Connection`, `Runtime Config`, `Manifest`.
+            - **`Connection` Sub-Tab:** (Describes *how* to connect programmatically)
+                - *External-Remote:* Shows Base URL structure, Authentication details (Header/Bearer Token etc. as defined in manifest).
+                - *External-Local:* Shows required install/run commands, STDIO communication protocol explanation.
+                - *Omni-Hosted:* Clearly displays the **unique, secure Omni SSE Endpoint URL** (`wss://[instance-id].omni.mcphub.ai/` example) provided for *this specific hosted instance*. Includes a "Copy Endpoint" button. Details required Authentication (Platform API Key or specific tokens associated with Skillsets). Provides link to generate/manage keys.
+            - **`Runtime Config` Sub-Tab:** (Describes ENV VARS / configuration values)
+                - *External Servers:* Displays the *defined* required/optional ENV VARS from the manifest/schema needed to *run the server yourself* (Read-only table: Name, Required, Secret, Description, Default). Explains what needs to be set for the server to run *anywhere*. Focus is informational for self-hosting.
+                - *Omni-Hosted:* Displays ENV VARS required *for deployment on MCP Omni*. **If user has permissions**, this becomes an **editable form** showing the *actual* values configured for *this specific deployment instance* (values masked for secrets). Includes UI to *edit* these deployment-specific variables (Key, Value input, Add/Remove rows, Save button). Save triggers confirmation and potentially redeploy.
+            - **`Manifest` Sub-Tab:** Displays `mcp-omni.json` content (read-only). Validation status shown. Same for both types. Includes Prompts/Resources section if defined.
+        - **`Installation & Usage` Tab:** **Crucial Adaptation.** Focuses on *how clients consume* the server. May use Sub-Tabs for SDKs, Specific Clients (Claude, Cursor...), Manual/API.
+            - **Content Adaptation:** All code examples (SDK Python/TS, `curl`, client setup guides with screenshots) MUST dynamically use the correct connection method based on the Server's Type & Hosting:
+                - *External-Remote Examples:* Use generic endpoint placeholder based on manifest, show Header/Param auth examples.
+                - *External-Local Examples:* Show process spawning, stdin/stdout interaction examples using SDKs or command line.
+                - *Omni-Hosted Examples:* Use the specific `YOUR_OMNI_SKILL_ENDPOINT` and Platform API Key / Skillset token authentication methods. Include specific SDK/API examples (`curl`) demonstrating connection to *this hosted SSE endpoint*.
+            - **"Get Connection Info" Helper Button:** Always present. Opens the **Install Helper Modal** providing tailored Auto/JSON/URL/STDIO configuration snippets appropriate for the *specific type and hosting model* of the server being viewed, for use in various clients.
+            - **Integrating into Omni Workflows (Omni-Hosted):** Link to docs/guides on how to use this hosted Server (as a Skill) within the (future/potential) MCP Omni workflow builder.
+        - **`Security & Score` Tab:**
+            - **Content:** Displays score based on repo analysis, manifest validity, license check, user reviews. Security scan results (dependency, static analysis), declared required permissions.
+            - **Adaptation:** For Omni-Hosted servers, security scans are performed *by MCP Omni* during build/deploy. Results are more definitive. Required permissions are *enforced* by the platform sandbox; display actual enforced permissions. For External servers, scans are *best-effort* on external repos (clearly stated) or based on submitted reports; required permissions are *declared*. Clearly label the source/scope of the scans shown.
+        - **`Reviews & Comments` Tab:** (Standard) Community feedback specific to this Server (regardless of hosting). Provides space for discussion (comments/Q&A).
+        - **`Use Cases` Tab:** (Standard) Links to Use Cases (tutorials, guides) featuring this Server or its Tools.
+        - **`Related Items` Tab:** (Standard) Related Servers (external or hosted), potentially compatible Clients. Includes Comparison feature access.
+        - **`Versions` Tab:** (Standard) Version history, changelog rendering (from repo/submissions). Allows comparing versions.
+        - **`Deployment & Monitoring` Tab (Conditional: Omni-Hosted & User has Permissions Only):** (Integrates previous "Deployed Skills Management" features)
+            - **Status & Controls Section:** Clear status indicator (`Running`, `Stopped`, `Building`, `Failed`, etc.). Buttons: `Start`, `Stop`, `Restart`, `Redeploy Latest` (triggers rebuild from linked repo/version using current config), `Delete Deployment` (with confirmation).
+            - **Endpoint & Access Section:** Displays the live SSE Endpoint URL. Button/link to manage API Keys associated with platform access. Link to configure access control/sharing within Org (if applicable).
+            - **Resource Usage Section:** Show live/recent metrics graphs/values for CPU Usage, Memory Usage, Network IO/Bandwidth, Call Counts, Error Rates for *this specific deployment*. Time range selector for metrics. Link to more detailed historical metrics/tracing in main `/settings/observability` section.
+            - **Configuration Section:** *Mirror/Link* to the editable Runtime Config ENV VAR form from the `Schema & Config` tab for convenience. Changes here affect the live deployment after save/redeploy.
+            - **Logs Section:** Embedded terminal-like log viewer showing recent build and runtime logs from the hosted Server instance. Filter by log level (stdout/stderr), search logs, specify time range. Option to download logs. Set retention period based on plan.
+            - **Link:** Clear link to the main `/settings/hosting` page for managing *all* hosted Servers.
+    1. **Right Sidebar (Adaptive Actions & Info):**
+        - **Primary Action Buttons Block:** **Dynamically Changes Based on Hosting Type & Permissions:**
+            - *External Server:* `[Playground Icon] Test in Playground`, `[Code Icon] Get Connection Info` (Opens Modal), `[Bookmark Icon] Bookmark Server`, `[Compare Icon] Add to Compare`, `[Claim Icon] Claim Ownership` (if unclaimed by author).
+            - *Omni-Hosted Server (User has management permissions):* `[Settings Icon] Manage Deployment` (Scrolls/activates Deployment Tab), `[Playground Icon] Test Hosted Instance`, `[Skillset Icon] Add to Skillset`, `[Bookmark Icon] Bookmark Server`, `[Compare Icon] Add to Compare`.
+            - *Omni-Hosted Server (User viewing public listing, no manage permission):* `[Playground Icon] Test in Playground` (may use a generic test instance or prompt user to deploy), `[Code Icon] Get Connection Info` (provides generic endpoint info/auth requirements for platform connection), `[Bookmark Icon] Bookmark Server`, `[Compare Icon] Add to Compare`, `[Skillset Icon] Add to Skillset` (if applicable).
+        - **Metadata Summary Card:** Includes the prominent `Type:` and `Hosting:` badges along with Author, License, Score Summary, Security Status, Last Updated.
+        - **Registry Source Card:** Shows aggregator source logos (Glama, Smithery, etc.) if applicable.
+        - **Quick Links Card:** Source Repo, Issues, Official Docs.
+        - **Hosting Status / Info Snippet:**
+            - *IF External/Community:* "This is an externally managed server. Connect using methods under 'Installation & Usage'." Optionally add: "Want to run this securely without self-hosting?" `[Deploy Icon] Host this Server on Omni` button (initiates a flow to deploy this external server's code onto the platform, if compatible).
+            - *IF Omni-Hosted:* "Hosted by MCP Omni. Connect using the platform endpoint and credentials. Manage in the 'Deployment' tab (if permitted)."
+    1. **Install Helper Modal Component (Triggered by "Get Connection Info"):**
+        - **Adaptation:** Provides tabs/options for different clients/methods (Auto-config JSON, Connection URL, Manual Setup Snippets, STDIO command examples). The generated JSON/URL/STDIO snippets MUST be tailored to the specific Server Type & Hosting model being viewed. E.g., for Omni-Hosted, it provides the platform SSE URL and guidance on using Platform API keys.
+- **Information Architecture & Content:**
+    - The core `Server` entity needs fields to track `hosting_type` (`external`, `omni_hosted`) and `server_type` (`remote`, `local`).
+    - For `omni_hosted` servers, link to `Deployment` entities storing runtime state, configuration overrides, unique endpoint URLs, logs, metrics, etc.
+    - Backend logic required to dynamically show/hide tabs, adapt content within tabs (e.g., editable config form vs. read-only), and change sidebar actions based on `hosting_type`, `server_type`, and user permissions (RBAC).
+    - Requires robust parsing and display of manifest data (tools, schema, config defs).
+    - Requires tight integration with hosting infrastructure (provisioning, runtime, monitoring, logging) for Omni-Hosted server features.
+    - **Version Sync:** Ensure that when viewing an Omni-Hosted Server, the displayed version clearly corresponds to the *deployed* version, while still allowing browsing of other available versions (potentially leading to a redeploy action) via the `Versions` tab.
+- **Interaction & User Flows:**
+    - User lands on page -> Immediately sees Hosting/Type badges setting the context.
+    - Tabs and Sidebar actions adapt based on this context and user permissions.
+    - *If External:* User focuses on understanding (`Overview`, `Tools`, `Schema`), evaluating (`Security`, `Reviews`), and connecting (`Installation & Usage`, `Get Connection Info`, `Playground`). May consider clicking "Host this Server on Omni".
+    - *If Omni-Hosted (with permissions):* User focuses on managing (`Deployment & Monitoring`), understanding capabilities (`Tools`, `Schema`), connecting (`Installation & Usage`), and checking status/logs/metrics (`Deployment & Monitoring`).
+    - *If Omni-Hosted (no permissions):* User evaluates like an external server but sees platform-specific connection info/examples on `Installation & Usage` tab. Can bookmark or add to Skillset.
+- **Considerations & Notes:**
+    - **Clarity of Distinction:** Use consistent and unambiguous language/visuals throughout the page to differentiate External vs. Omni-Hosted states and the implications for configuration/usage/management. This is paramount.
+    - **Hosting Eligibility & Flow:** Define clear criteria for which external servers are eligible for the "Host this Server on Omni" feature (e.g., source availability, licensing, compatibility with Omni's execution environment - Wasm/Containers?). The hosting initiation flow needs careful design.
+    - **Permissions Model:** Robust Role-Based Access Control (RBAC) needed for managing access to Deployment tab features, configuration editing, and start/stop actions on Omni-Hosted servers, especially within Organizations.
+    - **Performance:** Ensure dynamic content adaptation based on hosting type is performant and doesn't introduce significant page load delays. API calls for deployment status, logs, metrics must be efficient. Caching strategies may be needed.
